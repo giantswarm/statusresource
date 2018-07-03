@@ -68,6 +68,7 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 	}
 
 	// TODO when updating state is set and guest cluster is updated set updated status
+	// TODO emit metrics when update did not complete within a certain timeframe
 
 	// Apply the computed list of patches to make the status update take effect.
 	{
