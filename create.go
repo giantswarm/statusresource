@@ -24,6 +24,25 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 
 	var patches []Patch
 
+	// In case a CR might not have a status we can work with we have to initialize
+	// it.
+	//
+	// TODO remove this as soon as all CRs have a status structure applied.
+	{
+		if clusterStatus.Conditions == nil && clusterStatus.Versions == nil {
+			patches = append(patches, Patch{
+				Op:   "add",
+				Path: "/status",
+				Value: Status{
+					Cluster: providerv1alpha1.StatusCluster{
+						Conditions: []providerv1alpha1.StatusClusterCondition{},
+						Versions:   []providerv1alpha1.StatusClusterVersion{},
+					},
+				},
+			})
+		}
+	}
+
 	// We add the desired guest cluster version to the status history if it is not
 	// tracked already. This indicates an update is about to be processed. So we
 	// also set the status condition indicating the guest cluster is updating now.
