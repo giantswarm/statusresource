@@ -1,4 +1,4 @@
-package statusresouce
+package statusresource
 
 import (
 	"context"

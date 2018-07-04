@@ -1,4 +1,4 @@
-package statusresouce
+package statusresource
 
 type Patch struct {
 	Op    string      `json:"op"`
