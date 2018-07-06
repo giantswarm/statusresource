@@ -36,7 +36,10 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 	var patches []Patch
 
 	// In case a CR might not have a status at all, we cannot work with it below.
-	// We have to initialize it upfront to be safe.
+	// We have to initialize it upfront to be safe. Note that we only initialize
+	// fields that are managed by the statusresource library implementation. There
+	// might be other properties managed by external authorities who have to
+	// manage their own initialization.
 	{
 		if clusterStatus.Conditions == nil && clusterStatus.Versions == nil {
 			patches = append(patches, Patch{
@@ -54,6 +57,8 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 
 	// Check all node versions held by the cluster status and add the version the
 	// guest cluster successfully migrated to, to the historical list of versions.
+	// The implication here is that an update successfully took place. This means
+	// we can also add a status condition expressing the guest cluster is updated.
 	{
 		sameCount := currentNodeCount != 0 && currentNodeCount == desiredNodeCount
 		sameVersion := allNodesHaveVersion(clusterStatus.Nodes, desiredVersion)
@@ -72,9 +77,9 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		}
 	}
 
-	// We add the desired guest cluster version to the status history if it is not
-	// tracked already. This indicates an update is about to be processed. So we
-	// also set the status condition indicating the guest cluster is updating now.
+	// When we notice the current and the desired guest cluster version differs,
+	// an update is about to be processed. So we set the status condition
+	// indicating the guest cluster is updating now.
 	{
 		if currentVersion != "" && currentVersion != desiredVersion {
 			patches = append(patches, Patch{
@@ -86,6 +91,7 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 	}
 
 	// TODO emit metrics when update did not complete within a certain timeframe
+	// TODO update status condition when guest cluster is migrating from creating to created status
 
 	// Apply the computed list of patches to make the status update take effect.
 	// In case there are no patches we do not need to do anything here. So we
