@@ -1,14 +1,17 @@
 package v1alpha1
 
-const (
-	StatusClusterStatusFalse = "False"
-	StatusClusterStatusTrue  = "True"
+import (
+	"sort"
+	"time"
 )
 
-const (
-	StatusClusterTypeUpdated  = "Updated"
-	StatusClusterTypeUpdating = "Updating"
-)
+func (s StatusCluster) HasCreatedCondition() bool {
+	return hasCondition(s.Conditions, StatusClusterStatusTrue, StatusClusterTypeCreated)
+}
+
+func (s StatusCluster) HasCreatingCondition() bool {
+	return hasCondition(s.Conditions, StatusClusterStatusTrue, StatusClusterTypeCreating)
+}
 
 func (s StatusCluster) HasUpdatedCondition() bool {
 	return hasCondition(s.Conditions, StatusClusterStatusTrue, StatusClusterTypeUpdated)
@@ -36,6 +39,18 @@ func (s StatusCluster) LatestVersion() string {
 	}
 
 	return latest.Semver
+}
+
+func (s StatusCluster) WithCreatedCondition() []StatusClusterCondition {
+	return withCondition(s.Conditions, StatusClusterTypeCreating, StatusClusterTypeCreated, StatusClusterStatusTrue)
+}
+
+func (s StatusCluster) WithCreatingCondition() []StatusClusterCondition {
+	return withCondition(s.Conditions, StatusClusterTypeCreated, StatusClusterTypeCreating, StatusClusterStatusTrue)
+}
+
+func (s StatusCluster) WithNewVersion(version string) []StatusClusterVersion {
+	return withVersion(s.Versions, time.Now(), version, ClusterVersionLimit)
 }
 
 func (s StatusCluster) WithUpdatedCondition() []StatusClusterCondition {
@@ -83,4 +98,26 @@ func withCondition(conditions []StatusClusterCondition, search string, replace s
 	}
 
 	return newConditions
+}
+
+func withVersion(versions []StatusClusterVersion, date time.Time, version string, limit int) []StatusClusterVersion {
+	var newVersions []StatusClusterVersion
+
+	start := 0
+	if len(versions) >= limit {
+		start = len(versions) - limit + 1
+	}
+
+	sort.Sort(sortClusterStatusVersionsByDate(versions))
+
+	for i := start; i < len(versions); i++ {
+		newVersions = append(newVersions, versions[i])
+	}
+
+	newVersions = append(newVersions, StatusClusterVersion{
+		Date:   date,
+		Semver: version,
+	})
+
+	return newVersions
 }
