@@ -3,7 +3,6 @@ package statusresource
 import (
 	"context"
 	"encoding/json"
-	"time"
 
 	providerv1alpha1 "github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/microerror"
@@ -18,6 +17,18 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		return microerror.Mask(err)
 	}
 	clusterStatus, err := r.clusterStatusFunc(obj)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	currentVersion := clusterStatus.LatestVersion()
+	desiredVersion, err := r.versionBundleVersionFunc(obj)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	currentNodeCount := len(clusterStatus.Nodes)
+	desiredNodeCount, err := r.nodeCountFunc(obj)
 	if err != nil {
 		return microerror.Mask(err)
 	}
@@ -41,50 +52,39 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		}
 	}
 
-	// We add the desired guest cluster version to the status history if it is not
-	// tracked already. This indicates an update is about to be processed. So we
-	// also set the status condition indicating the guest cluster is updating now.
+	// Check all node versions held by the cluster status and add the version the
+	// guest cluster successfully migrated to, to the historical list of versions.
 	{
-		currentVersion := clusterStatus.LatestVersion()
-		desiredVersion, err := r.versionBundleVersionFunc(obj)
-		if err != nil {
-			return microerror.Mask(err)
-		}
+		sameCount := currentNodeCount != 0 && currentNodeCount == desiredNodeCount
+		sameVersion := allNodesHaveVersion(clusterStatus.Nodes, desiredVersion)
 
-		if currentVersion != "" && currentVersion != desiredVersion {
+		if sameCount && sameVersion {
 			patches = append(patches, Patch{
-				Op:   "add",
-				Path: "/status/cluster/conditions/-",
-				Value: providerv1alpha1.StatusClusterCondition{
-					Status: providerv1alpha1.StatusClusterStatusTrue,
-					Type:   providerv1alpha1.StatusClusterTypeUpdating,
-				},
+				Op:    "replace",
+				Path:  "/status/cluster/conditions",
+				Value: clusterStatus.WithUpdatedCondition(),
 			})
 			patches = append(patches, Patch{
-				Op:   "add",
-				Path: "/status/cluster/versions/-",
-				Value: providerv1alpha1.StatusClusterVersion{
-					Date:   time.Now(),
-					Semver: desiredVersion,
-				},
-			})
-		}
-
-		// TODO remove this once the transition period is completed and all stati
-		// contain the latest version.
-		if currentVersion == "" {
-			patches = append(patches, Patch{
-				Op:   "add",
-				Path: "/status/cluster/versions/-",
-				Value: providerv1alpha1.StatusClusterVersion{
-					Date:   time.Now(),
-					Semver: desiredVersion,
-				},
+				Op:    "replace",
+				Path:  "/status/cluster/versions",
+				Value: clusterStatus.WithNewVersion(desiredVersion),
 			})
 		}
 	}
 
-	// TODO when updating state is set and guest cluster is updated set updated status
+	// We add the desired guest cluster version to the status history if it is not
+	// tracked already. This indicates an update is about to be processed. So we
+	// also set the status condition indicating the guest cluster is updating now.
+	{
+		if currentVersion != "" && currentVersion != desiredVersion {
+			patches = append(patches, Patch{
+				Op:    "replace",
+				Path:  "/status/cluster/conditions",
+				Value: clusterStatus.WithUpdatingCondition(),
+			})
+		}
+	}
+
 	// TODO emit metrics when update did not complete within a certain timeframe
 
 	// Apply the computed list of patches to make the status update take effect.
@@ -118,4 +118,18 @@ func (r *Resource) patchObject(ctx context.Context, accessor metav1.Object, patc
 	}
 
 	return nil
+}
+
+func allNodesHaveVersion(nodes []providerv1alpha1.StatusClusterNode, version string) bool {
+	if len(nodes) == 0 {
+		return false
+	}
+
+	for _, n := range nodes {
+		if n.Version != version {
+			return false
+		}
+	}
+
+	return true
 }
