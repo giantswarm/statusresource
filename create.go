@@ -60,10 +60,11 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 	// The implication here is that an update successfully took place. This means
 	// we can also add a status condition expressing the guest cluster is updated.
 	{
+		isNotUpdated := !clusterStatus.HasUpdatedCondition()
 		sameCount := currentNodeCount != 0 && currentNodeCount == desiredNodeCount
 		sameVersion := allNodesHaveVersion(clusterStatus.Nodes, desiredVersion)
 
-		if sameCount && sameVersion {
+		if isNotUpdated && sameCount && sameVersion {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
@@ -81,7 +82,11 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 	// an update is about to be processed. So we set the status condition
 	// indicating the guest cluster is updating now.
 	{
-		if currentVersion != "" && currentVersion != desiredVersion {
+		isNotEmpty := currentVersion != ""
+		isNotUpdating := !clusterStatus.HasUpdatingCondition()
+		versionDiffers := currentVersion != desiredVersion
+
+		if isNotEmpty && isNotUpdating && versionDiffers {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
