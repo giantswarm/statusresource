@@ -11,7 +11,7 @@
   branch = "nodes"
   name = "github.com/giantswarm/apiextensions"
   packages = ["pkg/apis/provider/v1alpha1"]
-  revision = "e6764d7818b34dfd6dcb47a0253196dcb7f6a345"
+  revision = "c7d611b32d8800de33f70d6c4c76d6f72bcc7fdb"
 
 [[projects]]
   branch = "master"
@@ -52,8 +52,8 @@
     "proto",
     "sortkeys"
   ]
-  revision = "1adfc126b41513cc696b209667c8656ea7aac67c"
-  version = "v1.0.0"
+  revision = "636bf0302bc95575d69441b25a2603156ffdddf1"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -119,7 +119,7 @@
     "http2/hpack",
     "idna"
   ]
-  revision = "32a936f46389aa10549d60bd7833e54b01685d09"
+  revision = "d0887baf81f4598189d4e12a37c6da86f0bba4d0"
 
 [[projects]]
   branch = "master"
@@ -128,7 +128,7 @@
     "unix",
     "windows"
   ]
-  revision = "ce36f3865eeb42541ce3f87f32f8462c5687befa"
+  revision = "ac767d655b305d4e9612f5f6e33120b9176c4ad4"
 
 [[projects]]
   name = "golang.org/x/text"
