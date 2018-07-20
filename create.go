@@ -165,6 +165,7 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 
 	// TODO emit metrics when update did not complete within a certain timeframe
 	// TODO update status condition when guest cluster is migrating from creating to created status
+	// TODO cancel complete reconciliation if patches were applied to prevent duplicated event processing
 
 	// Apply the computed list of patches to make the status update take effect.
 	// In case there are no patches we do not need to do anything here. So we
