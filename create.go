@@ -78,7 +78,7 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 	}
 
 	if modified {
-		r.logger.LogCtx(ctx, "level", "debug", "message", "patches CR status")
+		r.logger.LogCtx(ctx, "level", "debug", "message", "patched CR status")
 		reconciliationcanceledcontext.SetCanceled(ctx)
 		r.logger.LogCtx(ctx, "level", "debug", "message", "canceling reconciliation for custom object")
 	}
