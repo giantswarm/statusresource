@@ -60,8 +60,8 @@
 [[projects]]
   name = "github.com/docker/go-connections"
   packages = ["nat"]
-  revision = "3ede32e2033de7505e6500d6c868c2b9ed9f169d"
-  version = "v0.3.0"
+  revision = "7395e3f8aa162843a74ed6d48e79627d9792ac55"
+  version = "v0.4.0"
 
 [[projects]]
   name = "github.com/docker/go-units"
@@ -115,13 +115,13 @@
   branch = "master"
   name = "github.com/giantswarm/certs"
   packages = ["."]
-  revision = "fa0af96de35e5a2d7c51f5ba9e49a4f346496c00"
+  revision = "e91f12dea59971a68d08a48479014e33d1b90540"
 
 [[projects]]
   branch = "master"
   name = "github.com/giantswarm/errors"
   packages = ["guest"]
-  revision = "cf09767ac71d8449b49372f33b5b7e3b5006c0aa"
+  revision = "9e78ca0e32a019481beb21ae3e158d1bb150730d"
 
 [[projects]]
   branch = "master"
@@ -133,7 +133,7 @@
   branch = "master"
   name = "github.com/giantswarm/helmclient"
   packages = ["."]
-  revision = "3914877fd51ce6d6fed716e770748abc8ab73501"
+  revision = "382dab3023ef7ed0de57a13607a1dad541b397a0"
 
 [[projects]]
   branch = "master"
@@ -145,7 +145,7 @@
   branch = "master"
   name = "github.com/giantswarm/microerror"
   packages = ["."]
-  revision = "325932fa68e70dd4464598f11e2f710ac1aaec46"
+  revision = "a8d5d4f526c526b4b773062958847fe7e0b7f449"
 
 [[projects]]
   branch = "master"
@@ -163,7 +163,7 @@
     "client/k8srestconfig",
     "controller/context/reconciliationcanceledcontext"
   ]
-  revision = "c73ec04de943dfc8db8420ee73b63b2940026641"
+  revision = "b549537227f0b5de6525ed65361a4bc660ba90c4"
 
 [[projects]]
   name = "github.com/go-kit/kit"
@@ -341,7 +341,7 @@
     "nfs",
     "xfs"
   ]
-  revision = "ae68e2d4c00fed4943b5f6698d504a5fe083da8a"
+  revision = "05ee40e3a273f7245e8777337fc7b46e533a9a92"
 
 [[projects]]
   name = "github.com/spf13/cobra"
@@ -363,7 +363,7 @@
     "ed25519/internal/edwards25519",
     "ssh/terminal"
   ]
-  revision = "a2144134853fc9a27a7b1e3eb4f19f1a76df13c9"
+  revision = "c126467f60eb25f8f27e5a981f32a87e3965053f"
 
 [[projects]]
   branch = "master"
@@ -377,7 +377,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "a680a1efc54dd51c040b3b5ce4939ea3cf2ea0d1"
+  revision = "a0f8a16cb08c06df97cbdf9c47f4731ba548c33c"
 
 [[projects]]
   branch = "master"
@@ -386,7 +386,7 @@
     "unix",
     "windows"
   ]
-  revision = "ac767d655b305d4e9612f5f6e33120b9176c4ad4"
+  revision = "bd9dbc187b6e1dacfdd2722a87e83093c2d7bd6e"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -425,7 +425,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "02b4e95473316948020af0b7a4f0f22c73929b0e"
+  revision = "2a72893556e4d1f6c795a4c039314c9fa751eedb"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -474,8 +474,8 @@
     "json",
     "jwt"
   ]
-  revision = "76dd09796242edb5b897103a75df2645c028c960"
-  version = "v2.1.6"
+  revision = "349dc03548930652802aadc09fb126e2b7cb6d80"
+  version = "v2.1.7"
 
 [[projects]]
   name = "gopkg.in/yaml.v2"
@@ -916,14 +916,14 @@
     "pkg/volume/util/recyclerclient",
     "pkg/volume/util/types"
   ]
-  revision = "32ac1c9073b132b8ba18aa830f46b77dcceb0723"
-  version = "v1.10.5"
+  revision = "a21fdbd78dde8f5447f5f6c331f7eb6f80bd684e"
+  version = "v1.10.6"
 
 [[projects]]
   branch = "master"
   name = "k8s.io/utils"
   packages = ["exec"]
-  revision = "73fcbfe1475a06d24a3e101012024bdf9e884cbb"
+  revision = "66066c83e385e385ccc3c964b44fd7dcd413d0ed"
 
 [[projects]]
   branch = "master"
