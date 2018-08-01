@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/cenkalti/backoff"
@@ -101,8 +102,9 @@ func (r *Resource) applyPatches(ctx context.Context, accessor metav1.Object, pat
 	if err != nil {
 		return microerror.Mask(err)
 	}
+	p := ensureSelfLink(accessor.GetSelfLink())
 
-	err = r.restClient.Patch(types.JSONPatchType).AbsPath(accessor.GetSelfLink()).Body(b).Do().Error()
+	err = r.restClient.Patch(types.JSONPatchType).AbsPath(p).Body(b).Do().Error()
 	if errors.IsConflict(err) {
 		return microerror.Mask(err)
 	} else if errors.IsResourceExpired(err) {
@@ -277,4 +279,12 @@ func allNodesHaveVersion(nodes []providerv1alpha1.StatusClusterNode, version str
 	}
 
 	return true
+}
+
+func ensureSelfLink(p string) string {
+	if strings.HasSuffix(p, "/status") {
+		return p
+	}
+
+	return p + "/status"
 }
