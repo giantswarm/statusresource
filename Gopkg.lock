@@ -161,6 +161,7 @@
   name = "github.com/giantswarm/operatorkit"
   packages = [
     "client/k8srestconfig",
+    "controller/context/finalizerskeptcontext",
     "controller/context/reconciliationcanceledcontext"
   ]
   revision = "6cc3caa2831a7d1fca262962d5690a6d3408b60c"
@@ -935,6 +936,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9b3af5fc0eaf6d217bc2808ca78f40cccd2aad683b600c8a91a344d2cd748e9f"
+  inputs-digest = "7730eed67d19460e73ab52dd8af4d53f49c9af3a7a5fa7c869b0bc5e938de235"
   solver-name = "gps-cdcl"
   solver-version = 1
