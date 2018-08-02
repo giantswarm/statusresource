@@ -285,6 +285,7 @@ func (r *Resource) computePatches(ctx context.Context, accessor metav1.Object, o
 
 	// TODO emit metrics when update did not complete within a certain timeframe
 	// TODO update status condition when guest cluster is migrating from creating to created status
+	// TODO update status condition to Deleting during delete event when guest cluster is being deleted
 
 	return patches, nil
 }
