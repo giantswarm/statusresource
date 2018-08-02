@@ -96,10 +96,7 @@ func (r *Resource) computeDeleteEventPatches(ctx context.Context, accessor metav
 
 	var patches []Patch
 
-	// Check all node versions held by the cluster status and add the version the
-	// guest cluster successfully migrated to, to the historical list of versions.
-	// The implication here is that an update successfully took place. This means
-	// we can also add a status condition expressing the guest cluster is updated.
+	// Ensure the cluster is set into a deleting status on the delete event.
 	{
 		notDeleting := !clusterStatus.HasDeletingCondition()
 
