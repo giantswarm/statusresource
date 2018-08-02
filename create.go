@@ -53,7 +53,7 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 				return microerror.Mask(err)
 			}
 
-			patches, err := r.computePatches(ctx, newAccessor, newObj)
+			patches, err := r.computeCreateEventPatches(ctx, newAccessor, newObj)
 			if err != nil {
 				return microerror.Mask(err)
 			}
@@ -116,7 +116,7 @@ func (r *Resource) applyPatches(ctx context.Context, accessor metav1.Object, pat
 	return nil
 }
 
-func (r *Resource) computePatches(ctx context.Context, accessor metav1.Object, obj interface{}) ([]Patch, error) {
+func (r *Resource) computeCreateEventPatches(ctx context.Context, accessor metav1.Object, obj interface{}) ([]Patch, error) {
 	clusterStatus, err := r.clusterStatusFunc(obj)
 	if err != nil {
 		return nil, microerror.Mask(err)
