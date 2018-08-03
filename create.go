@@ -155,11 +155,12 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 	// are known and no versions are set, we set the guest cluster status to a
 	// creating condition.
 	{
+		notCreating := !clusterStatus.HasCreatingCondition()
 		conditionsEmpty := len(clusterStatus.Conditions) == 0
 		nodesEmpty := len(clusterStatus.Nodes) == 0
 		versionsEmpty := len(clusterStatus.Versions) == 0
 
-		if conditionsEmpty && nodesEmpty && versionsEmpty {
+		if notCreating && conditionsEmpty && nodesEmpty && versionsEmpty {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
@@ -172,10 +173,11 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 	// the cluster status reflects the transitioning from creating to created.
 	{
 		isCreating := clusterStatus.HasCreatingCondition()
+		notCreated := !clusterStatus.HasCreatedCondition()
 		sameCount := currentNodeCount != 0 && currentNodeCount == desiredNodeCount
 		sameVersion := allNodesHaveVersion(clusterStatus.Nodes, desiredVersion)
 
-		if isCreating && sameCount && sameVersion {
+		if isCreating && notCreated && sameCount && sameVersion {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
@@ -184,25 +186,20 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 		}
 	}
 
-	// Check all node versions held by the cluster status and add the version the
-	// guest cluster successfully migrated to, to the historical list of versions.
-	// The implication here is that an update successfully took place. This means
-	// we can also add a status condition expressing the guest cluster is updated.
+	// Set the status cluster condition to updated when an update successfully
+	// took place. Precondition for this is the guest cluster is updating and all
+	// nodes being known and all nodes having the same versions.
 	{
-		isNotUpdated := !clusterStatus.HasUpdatedCondition()
+		isUpdating := clusterStatus.HasUpdatingCondition()
+		notUpdated := !clusterStatus.HasUpdatedCondition()
 		sameCount := currentNodeCount != 0 && currentNodeCount == desiredNodeCount
 		sameVersion := allNodesHaveVersion(clusterStatus.Nodes, desiredVersion)
 
-		if isNotUpdated && sameCount && sameVersion {
+		if isUpdating && notUpdated && sameCount && sameVersion {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
 				Value: clusterStatus.WithUpdatedCondition(),
-			})
-			patches = append(patches, Patch{
-				Op:    "replace",
-				Path:  "/status/cluster/versions",
-				Value: clusterStatus.WithNewVersion(desiredVersion),
 			})
 		}
 	}
@@ -211,15 +208,31 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 	// an update is about to be processed. So we set the status condition
 	// indicating the guest cluster is updating now.
 	{
-		isNotEmpty := currentVersion != ""
-		isNotUpdating := !clusterStatus.HasUpdatingCondition()
+		isCreated := clusterStatus.HasCreatedCondition()
+		notUpdating := !clusterStatus.HasUpdatingCondition()
 		versionDiffers := currentVersion != desiredVersion
 
-		if isNotEmpty && isNotUpdating && versionDiffers {
+		if isCreated && notUpdating && versionDiffers {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
 				Value: clusterStatus.WithUpdatingCondition(),
+			})
+		}
+	}
+
+	// Check all node versions held by the cluster status and add the version the
+	// guest cluster successfully migrated to, to the historical list of versions.
+	{
+		isUpdated := clusterStatus.HasUpdatedCondition()
+		sameCount := currentNodeCount != 0 && currentNodeCount == desiredNodeCount
+		sameVersion := allNodesHaveVersion(clusterStatus.Nodes, desiredVersion)
+
+		if isUpdated && sameCount && sameVersion {
+			patches = append(patches, Patch{
+				Op:    "replace",
+				Path:  "/status/cluster/versions",
+				Value: clusterStatus.WithNewVersion(desiredVersion),
 			})
 		}
 	}
