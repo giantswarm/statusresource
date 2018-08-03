@@ -2,10 +2,8 @@ package statusresource
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"reflect"
-	"strings"
 	"time"
 
 	"github.com/cenkalti/backoff"
@@ -13,10 +11,8 @@ import (
 	"github.com/giantswarm/errors/guest"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/operatorkit/controller/context/reconciliationcanceledcontext"
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -86,31 +82,6 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		r.logger.LogCtx(ctx, "level", "debug", "message", "canceling reconciliation")
 	} else {
 		r.logger.LogCtx(ctx, "level", "debug", "message", "did not patch CR status")
-	}
-
-	return nil
-}
-
-func (r *Resource) applyPatches(ctx context.Context, accessor metav1.Object, patches []Patch) error {
-	patches = append(patches, Patch{
-		Op:    "test",
-		Value: accessor.GetResourceVersion(),
-		Path:  "/metadata/resourceVersion",
-	})
-
-	b, err := json.Marshal(patches)
-	if err != nil {
-		return microerror.Mask(err)
-	}
-	p := ensureSelfLink(accessor.GetSelfLink())
-
-	err = r.restClient.Patch(types.JSONPatchType).AbsPath(p).Body(b).Do().Error()
-	if errors.IsConflict(err) {
-		return microerror.Mask(err)
-	} else if errors.IsResourceExpired(err) {
-		return microerror.Mask(err)
-	} else if err != nil {
-		return microerror.Mask(err)
 	}
 
 	return nil
@@ -301,12 +272,4 @@ func allNodesHaveVersion(nodes []providerv1alpha1.StatusClusterNode, version str
 	}
 
 	return true
-}
-
-func ensureSelfLink(p string) string {
-	if strings.HasSuffix(p, "/status") {
-		return p
-	}
-
-	return p + "/status"
 }
