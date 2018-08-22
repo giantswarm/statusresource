@@ -38,10 +38,6 @@ func (r *Resource) Collect(ch chan<- prometheus.Metric) {
 				continue
 			}
 
-			fmt.Printf("\n")
-			fmt.Printf("%#v\n", event.Object)
-			fmt.Printf("\n")
-
 			m, err := meta.Accessor(event.Object)
 			if err != nil {
 				r.logger.Log("level", "error", "message", "getting meta accessor failed", "stack", fmt.Sprintf("%#v", err))
