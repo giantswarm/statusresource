@@ -65,6 +65,9 @@ func New(config Config) (*Resource, error) {
 	if config.BackOffFactory == nil {
 		config.BackOffFactory = func() backoff.Interface { return backoff.NewMaxRetries(3, 1*time.Second) }
 	}
+	if config.ClusterEndpointFunc == nil {
+		return nil, microerror.Maskf(invalidConfigError, "%T.ClusterEndpointFunc must not be empty", config)
+	}
 	if config.ClusterIDFunc == nil {
 		return nil, microerror.Maskf(invalidConfigError, "%T.ClusterIDFunc must not be empty", config)
 	}
