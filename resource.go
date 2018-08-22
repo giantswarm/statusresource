@@ -11,11 +11,9 @@ import (
 	"github.com/giantswarm/guestcluster"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
-	"github.com/prometheus/client_golang/prometheus"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/rest"
 )
 
@@ -23,7 +21,7 @@ const (
 	Name = "status"
 )
 
-type Config struct {
+type ResourceConfig struct {
 	BackOffFactory      func() backoff.Interface
 	ClusterEndpointFunc func(v interface{}) (string, error)
 	ClusterIDFunc       func(v interface{}) (string, error)
@@ -49,7 +47,6 @@ type Config struct {
 	//
 	RESTClient               rest.Interface
 	VersionBundleVersionFunc func(v interface{}) (string, error)
-	Watcher                  func(opts metav1.ListOptions) (watch.Interface, error)
 }
 
 type Resource struct {
@@ -62,10 +59,9 @@ type Resource struct {
 	nodeCountFunc            func(v interface{}) (int, error)
 	restClient               rest.Interface
 	versionBundleVersionFunc func(v interface{}) (string, error)
-	watcher                  func(opts metav1.ListOptions) (watch.Interface, error)
 }
 
-func New(config Config) (*Resource, error) {
+func NewResource(config ResourceConfig) (*Resource, error) {
 	if config.BackOffFactory == nil {
 		config.BackOffFactory = func() backoff.Interface { return backoff.NewMaxRetries(3, 1*time.Second) }
 	}
@@ -93,9 +89,6 @@ func New(config Config) (*Resource, error) {
 	if config.VersionBundleVersionFunc == nil {
 		return nil, microerror.Maskf(invalidConfigError, "%T.VersionBundleVersionFunc must not be empty", config)
 	}
-	if config.Watcher == nil {
-		return nil, microerror.Maskf(invalidConfigError, "%T.Watcher must not be empty", config)
-	}
 
 	r := &Resource{
 		backOffFactory:           config.BackOffFactory,
@@ -107,20 +100,6 @@ func New(config Config) (*Resource, error) {
 		nodeCountFunc:            config.NodeCountFunc,
 		restClient:               config.RESTClient,
 		versionBundleVersionFunc: config.VersionBundleVersionFunc,
-		watcher:                  config.Watcher,
-	}
-
-	{
-		r.logger.Log("level", "debug", "message", "registering collector")
-
-		err := prometheus.Register(prometheus.Collector(r))
-		if IsAlreadyRegisteredError(err) {
-			r.logger.Log("level", "debug", "message", "collector already registered")
-		} else if err != nil {
-			return nil, microerror.Mask(err)
-		}
-
-		r.logger.Log("level", "debug", "message", "registered collector")
 	}
 
 	return r, nil
