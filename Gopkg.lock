@@ -124,7 +124,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:94d6e751bc99771396bf9e8693bbeb7eb84d6f6ae847af14b903f50f4c3ffe8a"
+  digest = "1:2e92e2543a4613c39b4c1092a98f9234dfe49e5b2fd8e9313d5029d6052328d1"
   name = "github.com/giantswarm/apiextensions"
   packages = [
     "pkg/apis/core/v1alpha1",
@@ -137,7 +137,7 @@
     "pkg/clientset/versioned/typed/provider/v1alpha1",
   ]
   pruneopts = "UT"
-  revision = "430b742e17c02f925ef9bc762499431309ec5407"
+  revision = "427166f178767c667affce0e68a88c0f77df4972"
 
 [[projects]]
   branch = "master"
@@ -404,12 +404,12 @@
   version = "v1.1"
 
 [[projects]]
-  digest = "1:b6221ec0f8903b556e127c449e7106b63e6867170c2d10a7c058623d086f2081"
+  branch = "master"
+  digest = "1:807c9fe0be3321781b6922b6659ad7f938864b475d581c802f46de981ad48e3b"
   name = "github.com/prometheus/client_golang"
   packages = ["prometheus"]
   pruneopts = "UT"
-  revision = "c5b7fccd204277076155f10851dad72b76a49317"
-  version = "v0.8.0"
+  revision = "ebce7d0078c0109cbb4de5d50a2b799920b0f0d0"
 
 [[projects]]
   branch = "master"
@@ -1092,10 +1092,12 @@
     "github.com/giantswarm/micrologger",
     "github.com/giantswarm/operatorkit/controller/context/finalizerskeptcontext",
     "github.com/giantswarm/operatorkit/controller/context/reconciliationcanceledcontext",
+    "github.com/prometheus/client_golang/prometheus",
     "k8s.io/apimachinery/pkg/api/errors",
     "k8s.io/apimachinery/pkg/api/meta",
     "k8s.io/apimachinery/pkg/apis/meta/v1",
     "k8s.io/apimachinery/pkg/types",
+    "k8s.io/apimachinery/pkg/watch",
     "k8s.io/apiserver/pkg/endpoints/request",
     "k8s.io/client-go/kubernetes",
     "k8s.io/client-go/rest",

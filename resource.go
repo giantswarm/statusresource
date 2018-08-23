@@ -21,7 +21,7 @@ const (
 	Name = "status"
 )
 
-type Config struct {
+type ResourceConfig struct {
 	BackOffFactory      func() backoff.Interface
 	ClusterEndpointFunc func(v interface{}) (string, error)
 	ClusterIDFunc       func(v interface{}) (string, error)
@@ -61,7 +61,7 @@ type Resource struct {
 	versionBundleVersionFunc func(v interface{}) (string, error)
 }
 
-func New(config Config) (*Resource, error) {
+func NewResource(config ResourceConfig) (*Resource, error) {
 	if config.BackOffFactory == nil {
 		config.BackOffFactory = func() backoff.Interface { return backoff.NewMaxRetries(3, 1*time.Second) }
 	}
