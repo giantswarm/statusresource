@@ -105,7 +105,6 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 				prometheus.GaugeValue,
 				float64(boolToInt(p.ClusterStatus().HasCreatingCondition())),
 				m.GetName(),
-				"Creating",
 				providerv1alpha1.StatusClusterTypeCreating,
 			)
 			ch <- prometheus.MustNewConstMetric(
