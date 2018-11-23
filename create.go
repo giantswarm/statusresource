@@ -237,9 +237,9 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 				r.logger.LogCtx(ctx, "level", "debug", "message", "waiting for certificates timed out")
 			} else if err != nil {
 				return nil, microerror.Mask(err)
+			} else {
+				r.logger.LogCtx(ctx, "level", "debug", "message", "created Kubernetes client for tenant cluster")
 			}
-
-			r.logger.LogCtx(ctx, "level", "debug", "message", "created Kubernetes client for tenant cluster")
 		}
 
 		if k8sClient != nil {
