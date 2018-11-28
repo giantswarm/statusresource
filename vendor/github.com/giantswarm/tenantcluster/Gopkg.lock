@@ -50,7 +50,7 @@
     "reference",
   ]
   pruneopts = "UT"
-  revision = "93e082742a009850ac46962150b2f652a822c5ff"
+  revision = "aa985ba8897a426e5db31b36cd8cca83cf85cead"
 
 [[projects]]
   digest = "1:67bf6da2a62f206f3387976fcd8f4df00371719a6e9517e0e2b54c32edf342d9"
@@ -165,11 +165,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:505f0e28eb921ead97e2510a4ed935acab575357491b393a696dcef18b820864"
+  digest = "1:a8ffb07ea9cff14a45fa47ede55006d108a80033f8f6f9b38a20b312b9d21b2c"
   name = "github.com/giantswarm/helmclient"
   packages = ["."]
   pruneopts = "UT"
-  revision = "5e333423d29cfa3d44a157678acd70b6b9c7b9d2"
+  revision = "e0f6f9b00515307f8e4807ce38578f620cda130a"
 
 [[projects]]
   branch = "master"
@@ -204,7 +204,7 @@
   name = "github.com/giantswarm/operatorkit"
   packages = ["client/k8srestconfig"]
   pruneopts = "UT"
-  revision = "671a2454163f995264229dc58af40ee852baf2a1"
+  revision = "6f0fa5277dfb4a893fde10c7860eca3f8c68ebc7"
 
 [[projects]]
   digest = "1:0cfcded8689c2c964c223650009c5dd9e283c22d57f18f2335aafa16cc22acf1"
@@ -428,7 +428,7 @@
     "model",
   ]
   pruneopts = "UT"
-  revision = "aeab699e26f4d4089dba5e522e5d9babd2adbaf7"
+  revision = "4724e9255275ce38f7179b2478abeae4e28c904f"
 
 [[projects]]
   branch = "master"
@@ -441,7 +441,7 @@
     "xfs",
   ]
   pruneopts = "UT"
-  revision = "185b4288413d2a0dd0806f78c90dde719829e5ae"
+  revision = "619930b0b4713cc1280189bf0a4c54b3fb506f60"
 
 [[projects]]
   digest = "1:645cabccbb4fa8aab25a956cbcbdf6a6845ca736b2c64e197ca7cbb9d210b939"
@@ -461,7 +461,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8e241498e35f550e5192ee6b1f6ff2c0a7ffe81feff9541d297facffe1383979"
+  digest = "1:b06f45abbe7431aec373695c6cf9770a051fa4ac81ad31b3fa73ddf3bb76bb27"
   name = "golang.org/x/crypto"
   packages = [
     "ed25519",
@@ -470,7 +470,7 @@
     "ssh/terminal",
   ]
   pruneopts = "UT"
-  revision = "3d3f9f413869b949e48070b5bc593aa22cc2b8f2"
+  revision = "eb0de9b17e854e9b1ccd9963efafc79862359959"
 
 [[projects]]
   branch = "master"
@@ -490,14 +490,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f343f077a5b0bc3a3788b3a04e24dd417e3e25b2acb529c413e212d2c42416ef"
+  digest = "1:0c7cb58af944f9690af91474a75371eecfe54c1ce3771a8dc08924430ee785d3"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "0cf1ed9e522b7dbb416f080a5c8003de9b702bf4"
+  revision = "4ed8d59d0b35e1e29334a206d1b3f38b1e5dfb31"
 
 [[projects]]
   digest = "1:e5a8511f063c38c51ab9ab80e718e9149f692652aeb4e393a8c020dd1bf38ca2"
@@ -542,7 +542,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "b5d43981345bdb2c233eb4bf3277847b48c6fdc6"
+  revision = "31ac5d88444a9e7ad18077db9a165d793ad06a2e"
 
 [[projects]]
   digest = "1:bf7e2328a58176b7f29f3b425b0555745e9a18ed803f5fd8f6c2c13913a60bb4"
@@ -1058,8 +1058,8 @@
     "pkg/volume/util/types",
   ]
   pruneopts = "UT"
-  revision = "be1a908c6aa47e0ae1b1dc861a1de6ccfe963aa2"
-  version = "v1.10.10"
+  revision = "637c7e288581ee40ab4ca210618a89a555b6e7e9"
+  version = "v1.10.11"
 
 [[projects]]
   branch = "master"

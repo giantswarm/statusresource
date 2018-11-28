@@ -45,7 +45,7 @@ required = [
   branch = "master"
   name = "github.com/giantswarm/backoff"
 
-[[override]]
+[[constraint]]
   branch = "master"
   name = "github.com/giantswarm/errors"
 
@@ -57,7 +57,7 @@ required = [
   branch = "master"
   name = "github.com/giantswarm/micrologger"
 
-[[override]]
+[[constraint]]
   branch = "master"
   name = "github.com/giantswarm/tenantcluster"
 
