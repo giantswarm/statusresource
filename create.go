@@ -310,7 +310,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 					nodes = append(nodes, providerv1alpha1.NewStatusClusterNode(n, v))
 				}
 
-				nodesDiffer := nodes != nil && !reflect.DeepEqual(clusterStatus.Nodes, nodes)
+				nodesDiffer := nodes != nil && !allNodesEqual(clusterStatus.Nodes, nodes)
 
 				if nodesDiffer {
 					patches = append(patches, Patch{
@@ -342,4 +342,25 @@ func allNodesHaveVersion(nodes []providerv1alpha1.StatusClusterNode, version str
 	}
 
 	return true
+}
+
+func allNodesEqual(aNodes []providerv1alpha1.StatusClusterNode, bNodes []providerv1alpha1.StatusClusterNode) bool {
+	aRemoved := removeHeartBeatFromNodes(aNodes)
+	bRemoved := removeHeartBeatFromNodes(bNodes)
+
+	return reflect.DeepEqual(aRemoved, bRemoved)
+}
+
+func removeHeartBeatFromNodes(nodes []providerv1alpha1.StatusClusterNode) []providerv1alpha1.StatusClusterNode {
+	var newNodes []providerv1alpha1.StatusClusterNode
+
+	for _, n := range nodes {
+		newNodes = append(newNodes, providerv1alpha1.StatusClusterNode{
+			LastTransitionTime: n.LastTransitionTime,
+			Name:               n.Name,
+			Version:            n.Version,
+		})
+	}
+
+	return newNodes
 }
