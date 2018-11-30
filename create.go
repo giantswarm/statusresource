@@ -133,9 +133,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 			})
 
 			r.logger.LogCtx(ctx, "level", "info", "message", fmt.Sprintf("setting %#q status condition", providerv1alpha1.StatusClusterTypeCreating))
-		}
-
-		if clusterStatus.HasCreatingCondition() && isHeartBeatOverdue(clusterStatus.GetCreatingCondition()) {
+		} else if isHeartBeatOverdue(clusterStatus.GetCreatingCondition()) {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
@@ -162,9 +160,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 			})
 
 			r.logger.LogCtx(ctx, "level", "info", "message", fmt.Sprintf("setting %#q status condition", providerv1alpha1.StatusClusterTypeCreated))
-		}
-
-		if clusterStatus.HasCreatedCondition() && isHeartBeatOverdue(clusterStatus.GetCreatedCondition()) {
+		} else if isHeartBeatOverdue(clusterStatus.GetCreatedCondition()) {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
@@ -191,9 +187,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 			})
 
 			r.logger.LogCtx(ctx, "level", "info", "message", fmt.Sprintf("setting %#q status condition", providerv1alpha1.StatusClusterTypeUpdating))
-		}
-
-		if clusterStatus.HasUpdatingCondition() && isHeartBeatOverdue(clusterStatus.GetUpdatingCondition()) {
+		} else if isHeartBeatOverdue(clusterStatus.GetUpdatingCondition()) {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
@@ -221,9 +215,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 			})
 
 			r.logger.LogCtx(ctx, "level", "info", "message", fmt.Sprintf("setting %#q status condition", providerv1alpha1.StatusClusterTypeUpdated))
-		}
-
-		if clusterStatus.HasUpdatedCondition() && isHeartBeatOverdue(clusterStatus.GetUpdatedCondition()) {
+		} else if isHeartBeatOverdue(clusterStatus.GetUpdatedCondition()) {
 			patches = append(patches, Patch{
 				Op:    "replace",
 				Path:  "/status/cluster/conditions",
