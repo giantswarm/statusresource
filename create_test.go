@@ -15,7 +15,7 @@ func Test_removeTimesFromNodes(t *testing.T) {
 		expectedNodes []providerv1alpha1.StatusClusterNode
 	}{
 		{
-			name: "case 0: Ensure that name, version and labels are kept when dropping last heartbeat and last transitioning time",
+			name: "case 0: Ensure that name, version and labels are kept when dropping last transitioning time",
 			nodes: []providerv1alpha1.StatusClusterNode{
 				{
 					Labels: map[string]string{
@@ -24,9 +24,6 @@ func Test_removeTimesFromNodes(t *testing.T) {
 						"baz": "foo",
 					},
 
-					LastHeartbeatTime: providerv1alpha1.DeepCopyTime{
-						Time: time.Unix(123456, 0),
-					},
 					LastTransitionTime: providerv1alpha1.DeepCopyTime{
 						Time: time.Unix(123000, 0),
 					},
@@ -40,9 +37,6 @@ func Test_removeTimesFromNodes(t *testing.T) {
 						"ghi": "789",
 					},
 
-					LastHeartbeatTime: providerv1alpha1.DeepCopyTime{
-						Time: time.Unix(234567, 0),
-					},
 					LastTransitionTime: providerv1alpha1.DeepCopyTime{
 						Time: time.Unix(234500, 0),
 					},
@@ -58,9 +52,6 @@ func Test_removeTimesFromNodes(t *testing.T) {
 						"baz": "foo",
 					},
 
-					LastHeartbeatTime: providerv1alpha1.DeepCopyTime{
-						Time: time.Time{},
-					},
 					LastTransitionTime: providerv1alpha1.DeepCopyTime{
 						Time: time.Time{},
 					},
@@ -74,9 +65,6 @@ func Test_removeTimesFromNodes(t *testing.T) {
 						"ghi": "789",
 					},
 
-					LastHeartbeatTime: providerv1alpha1.DeepCopyTime{
-						Time: time.Time{},
-					},
 					LastTransitionTime: providerv1alpha1.DeepCopyTime{
 						Time: time.Time{},
 					},
