@@ -139,7 +139,7 @@
   branch = "kubeconfig"
   name = "github.com/giantswarm/tenantcluster"
   packages = ["."]
-  revision = "d9eb8bdf384e01ddd51693e36f48ecfed2fc0fd6"
+  revision = "5728e9e2c4c771f3b71423117be9857d6aa7006e"
 
 [[projects]]
   branch = "master"
