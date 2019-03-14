@@ -262,7 +262,7 @@ func (c *Client) EnsureTillerInstalled(ctx context.Context) error {
 
 			return nil
 		}
-		b := backoff.NewExponential(2*time.Minute, 5*time.Second)
+		b := backoff.NewExponential(1*time.Minute, 5*time.Second)
 		n := backoff.NewNotifier(c.logger, context.Background())
 
 		err := backoff.RetryNotify(o, b, n)
@@ -271,7 +271,7 @@ func (c *Client) EnsureTillerInstalled(ctx context.Context) error {
 		}
 	}
 
-	if pod != nil {
+	if !installTiller && pod != nil {
 		err = validateTillerVersion(pod, c.tillerImage)
 		if IsTillerOutdated(err) {
 			upgradeTiller = true
@@ -299,7 +299,7 @@ func (c *Client) EnsureTillerInstalled(ctx context.Context) error {
 		if err != nil {
 			return microerror.Mask(err)
 		}
-	} else {
+	} else if installTiller && upgradeTiller {
 		return microerror.Maskf(executionFailedError, "invalid state cannot both install and upgrade tiller")
 	}
 
@@ -313,7 +313,7 @@ func (c *Client) EnsureTillerInstalled(ctx context.Context) error {
 
 		o := func() error {
 			t, err := c.newTunnel()
-			if IsTillerNotFound(err) {
+			if !installTiller && IsTillerNotFound(err) {
 				return backoff.Permanent(microerror.Mask(err))
 			} else if err != nil {
 				return microerror.Mask(err)
@@ -333,7 +333,7 @@ func (c *Client) EnsureTillerInstalled(ctx context.Context) error {
 
 			return nil
 		}
-		b := backoff.NewExponential(backoff.ShortMaxWait, backoff.ShortMaxInterval)
+		b := backoff.NewExponential(1*time.Minute, 5*time.Second)
 		n := backoff.NewNotifier(c.logger, ctx)
 
 		err := backoff.RetryNotify(o, b, n)
