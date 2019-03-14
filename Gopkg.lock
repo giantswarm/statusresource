@@ -139,7 +139,7 @@
   branch = "master"
   name = "github.com/giantswarm/tenantcluster"
   packages = ["."]
-  revision = "1d3ac37fd61be32c260ede525c871fb209ae1a0e"
+  revision = "5393d99231d18bd6613ee5a2a0b7664e588f726a"
 
 [[projects]]
   branch = "master"
