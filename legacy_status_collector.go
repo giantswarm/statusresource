@@ -23,6 +23,14 @@ var (
 		},
 		nil,
 	)
+	legacyCreationSecondsCollectorDescription *prometheus.Desc = prometheus.NewDesc(
+		prometheus.BuildFQName("statusresource", "cluster", "creation_seconds"),
+		"Cluster creation duration.",
+		[]string{
+			"cluster_id",
+		},
+		nil,
+	)
 )
 
 type LegacyStatusCollectorConfig struct {
@@ -78,41 +86,55 @@ func (c *LegacyStatusCollector) Collect(ch chan<- prometheus.Metric) error {
 				panic("asserting Provider interface failed")
 			}
 
-			ch <- prometheus.MustNewConstMetric(
-				legacyStatusCollectorDescription,
-				prometheus.GaugeValue,
-				float64(boolToInt(p.ClusterStatus().HasCreatingCondition())),
-				m.GetName(),
-				providerv1alpha1.StatusClusterTypeCreating,
-			)
-			ch <- prometheus.MustNewConstMetric(
-				legacyStatusCollectorDescription,
-				prometheus.GaugeValue,
-				float64(boolToInt(p.ClusterStatus().HasCreatedCondition())),
-				m.GetName(),
-				providerv1alpha1.StatusClusterTypeCreated,
-			)
-			ch <- prometheus.MustNewConstMetric(
-				legacyStatusCollectorDescription,
-				prometheus.GaugeValue,
-				float64(boolToInt(p.ClusterStatus().HasUpdatingCondition())),
-				m.GetName(),
-				providerv1alpha1.StatusClusterTypeUpdating,
-			)
-			ch <- prometheus.MustNewConstMetric(
-				legacyStatusCollectorDescription,
-				prometheus.GaugeValue,
-				float64(boolToInt(p.ClusterStatus().HasUpdatedCondition())),
-				m.GetName(),
-				providerv1alpha1.StatusClusterTypeUpdated,
-			)
-			ch <- prometheus.MustNewConstMetric(
-				legacyStatusCollectorDescription,
-				prometheus.GaugeValue,
-				float64(boolToInt(p.ClusterStatus().HasDeletingCondition())),
-				m.GetName(),
-				providerv1alpha1.StatusClusterTypeDeleting,
-			)
+			if p.ClusterStatus().HasCreatedCondition() {
+				t1 := timeForCreatedCondition(p)
+				t2 := m.GetCreationTimestamp().Time
+
+				ch <- prometheus.MustNewConstMetric(
+					legacyCreationSecondsCollectorDescription,
+					prometheus.GaugeValue,
+					t1.Sub(t2).Seconds(),
+					m.GetName(),
+				)
+			}
+
+			{
+				ch <- prometheus.MustNewConstMetric(
+					legacyStatusCollectorDescription,
+					prometheus.GaugeValue,
+					float64(boolToInt(p.ClusterStatus().HasCreatingCondition())),
+					m.GetName(),
+					providerv1alpha1.StatusClusterTypeCreating,
+				)
+				ch <- prometheus.MustNewConstMetric(
+					legacyStatusCollectorDescription,
+					prometheus.GaugeValue,
+					float64(boolToInt(p.ClusterStatus().HasCreatedCondition())),
+					m.GetName(),
+					providerv1alpha1.StatusClusterTypeCreated,
+				)
+				ch <- prometheus.MustNewConstMetric(
+					legacyStatusCollectorDescription,
+					prometheus.GaugeValue,
+					float64(boolToInt(p.ClusterStatus().HasUpdatingCondition())),
+					m.GetName(),
+					providerv1alpha1.StatusClusterTypeUpdating,
+				)
+				ch <- prometheus.MustNewConstMetric(
+					legacyStatusCollectorDescription,
+					prometheus.GaugeValue,
+					float64(boolToInt(p.ClusterStatus().HasUpdatedCondition())),
+					m.GetName(),
+					providerv1alpha1.StatusClusterTypeUpdated,
+				)
+				ch <- prometheus.MustNewConstMetric(
+					legacyStatusCollectorDescription,
+					prometheus.GaugeValue,
+					float64(boolToInt(p.ClusterStatus().HasDeletingCondition())),
+					m.GetName(),
+					providerv1alpha1.StatusClusterTypeDeleting,
+				)
+			}
 		case <-time.After(time.Second):
 			return nil
 		}
@@ -120,7 +142,9 @@ func (c *LegacyStatusCollector) Collect(ch chan<- prometheus.Metric) error {
 }
 
 func (c *LegacyStatusCollector) Describe(ch chan<- *prometheus.Desc) error {
+	ch <- legacyCreationSecondsCollectorDescription
 	ch <- legacyStatusCollectorDescription
+
 	return nil
 }
 
@@ -130,4 +154,21 @@ func boolToInt(b bool) int {
 	}
 
 	return 0
+}
+
+// timeForCreatedCondition returns the lastTransitionTime for the Created status
+// conditions of a legacy provider CR.
+//
+//     - lastTransitionTime: "2018-11-12T17:01:56.654196952Z"
+//       status: "True"
+//       type: Created
+//
+func timeForCreatedCondition(p Provider) time.Time {
+	for _, s := range p.ClusterStatus().Conditions {
+		if s.Type == "Created" {
+			return s.LastTransitionTime.Time
+		}
+	}
+
+	return time.Time{}
 }
