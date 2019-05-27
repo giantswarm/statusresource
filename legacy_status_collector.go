@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	statusCollectorDescription *prometheus.Desc = prometheus.NewDesc(
+	legacyStatusCollectorDescription *prometheus.Desc = prometheus.NewDesc(
 		prometheus.BuildFQName("statusresource", "cluster", "status"),
 		"Cluster status condition as provided by the CR status.",
 		[]string{
@@ -79,35 +79,35 @@ func (c *LegacyStatusCollector) Collect(ch chan<- prometheus.Metric) error {
 			}
 
 			ch <- prometheus.MustNewConstMetric(
-				statusCollectorDescription,
+				legacyStatusCollectorDescription,
 				prometheus.GaugeValue,
 				float64(boolToInt(p.ClusterStatus().HasCreatingCondition())),
 				m.GetName(),
 				providerv1alpha1.StatusClusterTypeCreating,
 			)
 			ch <- prometheus.MustNewConstMetric(
-				statusCollectorDescription,
+				legacyStatusCollectorDescription,
 				prometheus.GaugeValue,
 				float64(boolToInt(p.ClusterStatus().HasCreatedCondition())),
 				m.GetName(),
 				providerv1alpha1.StatusClusterTypeCreated,
 			)
 			ch <- prometheus.MustNewConstMetric(
-				statusCollectorDescription,
+				legacyStatusCollectorDescription,
 				prometheus.GaugeValue,
 				float64(boolToInt(p.ClusterStatus().HasUpdatingCondition())),
 				m.GetName(),
 				providerv1alpha1.StatusClusterTypeUpdating,
 			)
 			ch <- prometheus.MustNewConstMetric(
-				statusCollectorDescription,
+				legacyStatusCollectorDescription,
 				prometheus.GaugeValue,
 				float64(boolToInt(p.ClusterStatus().HasUpdatedCondition())),
 				m.GetName(),
 				providerv1alpha1.StatusClusterTypeUpdated,
 			)
 			ch <- prometheus.MustNewConstMetric(
-				statusCollectorDescription,
+				legacyStatusCollectorDescription,
 				prometheus.GaugeValue,
 				float64(boolToInt(p.ClusterStatus().HasDeletingCondition())),
 				m.GetName(),
@@ -120,7 +120,7 @@ func (c *LegacyStatusCollector) Collect(ch chan<- prometheus.Metric) error {
 }
 
 func (c *LegacyStatusCollector) Describe(ch chan<- *prometheus.Desc) error {
-	ch <- statusCollectorDescription
+	ch <- legacyStatusCollectorDescription
 	return nil
 }
 
