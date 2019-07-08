@@ -7,7 +7,7 @@ Giant Swarm Kubernetes guest clusters.
 
 ## Statuses
 
-Statuses are written under `/status/cluster/conditions` in the CR,
+Statuses are written under `.status.cluster.conditions` in the CR,
 in the following format :
 
 ```
