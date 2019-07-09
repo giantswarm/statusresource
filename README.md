@@ -16,6 +16,6 @@ in the following format :
       type: Created
 ```
 
-Allowed status type are defined in [apiextentions](https://godoc.org/github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1) as `StatusClusterType*`.
+Allowed status type are defined in [apiextensions](https://godoc.org/github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1) as `StatusClusterType*`.
 
 Decisions for status transition are made based on number and version of nodes.
