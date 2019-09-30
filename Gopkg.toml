@@ -94,6 +94,10 @@ required = [
   branch = "master"
   name = "github.com/ghodss/yaml"
 
+[[override]]
+  branch = "master"
+  name = "github.com/russross/blackfriday"
+
 [prune]
   go-tests = true
   non-go = true
