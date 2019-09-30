@@ -87,6 +87,10 @@ required = [
 
 
 [[override]]
+  name = "k8s.io/kubernetes"
+  version = "v1.15.4"
+
+[[override]]
   name = "k8s.io/cli-runtime"
   version = "kubernetes-1.15.4"
 
@@ -95,8 +99,8 @@ required = [
   name = "github.com/ghodss/yaml"
 
 [[override]]
-  branch = "master"
   name = "github.com/russross/blackfriday"
+  version = "v1.5.2"
 
 [prune]
   go-tests = true

@@ -693,12 +693,12 @@
   revision = "8926f37f0bc1a432e673c60cedb705f783306da5"
 
 [[projects]]
-  branch = "master"
-  digest = "1:94633b5e99d72403cc38ff783a6d57691ae382f79dee37660fd0aa033b45d10e"
+  digest = "1:d9afa09f6a45f68ec50047f8187c9d273b1fbf507858a104064bb6d9eb2e2795"
   name = "github.com/russross/blackfriday"
   packages = ["."]
   pruneopts = "NUT"
-  revision = "a925a152c144ea7de0f451eaf2f7db9e52fa005a"
+  revision = "05f3235734ad95d0016f6a23902f06461fcf567a"
+  version = "v1.5.2"
 
 [[projects]]
   digest = "1:6792bb72ea0e7112157d02e4e175cd421b43d004a853f56316a19beca6e0c074"
