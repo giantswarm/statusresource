@@ -83,14 +83,6 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:1e784b626412da426fdcb4306ed15b6aefbfc96542e358e59a1ebd29a12365c7"
-  name = "github.com/giantswarm/certs"
-  packages = ["."]
-  pruneopts = "NUT"
-  revision = "ada4896290219c76ac213d690eb1903981ad5cac"
-
-[[projects]]
-  branch = "master"
   digest = "1:e9e6c4c2ae7f624a6eb1b768c582c05f200041de51faf5151b8e074eae917b57"
   name = "github.com/giantswarm/errors"
   packages = ["tenant"]
@@ -107,12 +99,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:192024336fb15f559cf02be585979b047bc21cbe4adb013bddc1cb4400d05e9b"
+  digest = "1:d3e80c2950007e60d60e4c89d133e59ffc3b9527223a4d0e95d2321e1f1b8451"
   name = "github.com/giantswarm/k8sclient"
   packages = [
     ".",
     "k8scrdclient",
-    "k8srestconfig",
   ]
   pruneopts = "NUT"
   revision = "6cb127468cd6b30eaf8030b875f796e34b481938"
@@ -146,14 +137,6 @@
   ]
   pruneopts = "NUT"
   revision = "5d098618662e74384f52bf064fe3588436873eb2"
-
-[[projects]]
-  branch = "master"
-  digest = "1:07185f49b13d696336e00ccb9e4e009137eb5fb42af2c406a827b547a527e4f5"
-  name = "github.com/giantswarm/tenantcluster"
-  packages = ["."]
-  pruneopts = "NUT"
-  revision = "800974a4d4bffd6f8f521b30f5fd353d1072e518"
 
 [[projects]]
   digest = "1:cbaf38b2bee7034fdcc5ce2b479d21b6b6a3eac57c9a9aee0d0e5d73b68742b8"
@@ -736,7 +719,6 @@
     "github.com/giantswarm/micrologger",
     "github.com/giantswarm/operatorkit/controller/context/finalizerskeptcontext",
     "github.com/giantswarm/operatorkit/controller/context/reconciliationcanceledcontext",
-    "github.com/giantswarm/tenantcluster",
     "github.com/google/go-cmp/cmp",
     "github.com/prometheus/client_golang/prometheus",
     "k8s.io/apimachinery/pkg/api/errors",
@@ -745,7 +727,6 @@
     "k8s.io/apimachinery/pkg/types",
     "k8s.io/apimachinery/pkg/watch",
     "k8s.io/apiserver/pkg/endpoints/request",
-    "k8s.io/client-go/kubernetes",
     "k8s.io/client-go/rest",
   ]
   solver-name = "gps-cdcl"

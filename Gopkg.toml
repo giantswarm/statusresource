@@ -63,10 +63,6 @@ required = [
 
 [[constraint]]
   branch = "master"
-  name = "github.com/giantswarm/tenantcluster"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/google/go-cmp"
 
 [[constraint]]
