@@ -8,9 +8,9 @@ import (
 
 	providerv1alpha1 "github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/backoff"
+	"github.com/giantswarm/k8sclient"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
-	"github.com/giantswarm/tenantcluster"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -26,8 +26,13 @@ type ResourceConfig struct {
 	ClusterEndpointFunc func(v interface{}) (string, error)
 	ClusterIDFunc       func(v interface{}) (string, error)
 	ClusterStatusFunc   func(v interface{}) (providerv1alpha1.StatusCluster, error)
-	Logger              micrologger.Logger
-	NodeCountFunc       func(v interface{}) (int, error)
+	// TODO replace this with a G8sClient to fetch the node versions from the
+	// NodeConfig status once we can use the NodeConfig for general node
+	// management. As of now NodeConfig CRs are still used for draining in older
+	// tenant clusters.
+	K8SClient     k8sclient.Interface
+	Logger        micrologger.Logger
+	NodeCountFunc func(v interface{}) (int, error)
 	// RESTClient needs to be configured with a serializer capable of serializing
 	// and deserializing the object which is watched by the informer. Otherwise
 	// deserialization will fail when trying to manage the cluster status.
@@ -40,12 +45,7 @@ type ResourceConfig struct {
 	//
 	//     g8sClient.CoreV1alpha1().RESTClient()
 	//
-	RESTClient rest.Interface
-	// TODO replace this with a G8sClient to fetch the node versions from the
-	// NodeConfig status once we can use the NodeConfig for general node
-	// management. As of now NodeConfig CRs are still used for draining in older
-	// tenant clusters.
-	TenantCluster            tenantcluster.Interface
+	RESTClient               rest.Interface
 	VersionBundleVersionFunc func(v interface{}) (string, error)
 }
 
@@ -54,10 +54,10 @@ type Resource struct {
 	clusterEndpointFunc      func(v interface{}) (string, error)
 	clusterIDFunc            func(v interface{}) (string, error)
 	clusterStatusFunc        func(v interface{}) (providerv1alpha1.StatusCluster, error)
+	k8sClient                k8sclient.Interface
 	logger                   micrologger.Logger
 	nodeCountFunc            func(v interface{}) (int, error)
 	restClient               rest.Interface
-	tenantCluster            tenantcluster.Interface
 	versionBundleVersionFunc func(v interface{}) (string, error)
 }
 
@@ -74,6 +74,9 @@ func NewResource(config ResourceConfig) (*Resource, error) {
 	if config.ClusterStatusFunc == nil {
 		return nil, microerror.Maskf(invalidConfigError, "%T.ClusterStatusFunc must not be empty", config)
 	}
+	if config.K8SClient == nil {
+		return nil, microerror.Maskf(invalidConfigError, "%T.K8SClient must not be empty", config)
+	}
 	if config.Logger == nil {
 		return nil, microerror.Maskf(invalidConfigError, "%T.Logger must not be empty", config)
 	}
@@ -82,9 +85,6 @@ func NewResource(config ResourceConfig) (*Resource, error) {
 	}
 	if config.RESTClient == nil {
 		return nil, microerror.Maskf(invalidConfigError, "%T.RESTClient must not be empty", config)
-	}
-	if config.TenantCluster == nil {
-		return nil, microerror.Maskf(invalidConfigError, "%T.TenantCluster must not be empty", config)
 	}
 	if config.VersionBundleVersionFunc == nil {
 		return nil, microerror.Maskf(invalidConfigError, "%T.VersionBundleVersionFunc must not be empty", config)
@@ -95,10 +95,10 @@ func NewResource(config ResourceConfig) (*Resource, error) {
 		clusterEndpointFunc:      config.ClusterEndpointFunc,
 		clusterIDFunc:            config.ClusterIDFunc,
 		clusterStatusFunc:        config.ClusterStatusFunc,
+		k8sClient:                config.K8SClient,
 		logger:                   config.Logger,
 		nodeCountFunc:            config.NodeCountFunc,
 		restClient:               config.RESTClient,
-		tenantCluster:            config.TenantCluster,
 		versionBundleVersionFunc: config.VersionBundleVersionFunc,
 	}
 
