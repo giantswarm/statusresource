@@ -38,11 +38,11 @@ required = [
   name = "github.com/docker/distribution"
 
 [[constraint]]
-  branch = "k8s-1-16"
+  branch = "master"
   name = "github.com/giantswarm/operatorkit"
 
 [[constraint]]
-  branch = "k8s-1-16"
+  branch = "master"
   name = "github.com/giantswarm/apiextensions"
 
 [[constraint]]
@@ -62,7 +62,7 @@ required = [
   name = "github.com/giantswarm/micrologger"
 
 [[constraint]]
-  branch = "k8s-1-16"
+  branch = "master"
   name = "github.com/giantswarm/tenantcluster"
 
 [[constraint]]
