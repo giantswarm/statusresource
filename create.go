@@ -9,10 +9,13 @@ import (
 	providerv1alpha1 "github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/backoff"
 	"github.com/giantswarm/errors/tenant"
+	"github.com/giantswarm/k8sclient"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/operatorkit/controller/context/reconciliationcanceledcontext"
+	"github.com/giantswarm/tenantcluster"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 )
 
 func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
@@ -217,45 +220,79 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 	// from the NodeConfig CR status. This is not possible right now because the
 	// NodeConfig CRs are still used for draining by older tenant clusters.
 	{
-		k8sClient := r.k8sClient.K8sClient()
+		var k8sClient kubernetes.Interface
+		{
+			r.logger.LogCtx(ctx, "level", "debug", "message", "creating Kubernetes client for tenant cluster")
 
-		o := metav1.ListOptions{}
-		list, err2 := k8sClient.CoreV1().Nodes().List(o)
-		if tenant.IsAPINotAvailable(err2) {
-			// fall through
-		} else if err2 != nil {
-			return nil, microerror.Mask(err2)
-		} else {
-			var nodes []providerv1alpha1.StatusClusterNode
-
-			for _, node := range list.Items {
-				l := node.GetLabels()
-				n := node.GetName()
-
-				labelProvider := "giantswarm.io/provider"
-				p, ok := l[labelProvider]
-				if !ok {
-					return nil, microerror.Maskf(missingLabelError, labelProvider)
-				}
-				labelVersion := p + "-operator.giantswarm.io/version"
-				v, ok := l[labelVersion]
-				if !ok {
-					return nil, microerror.Maskf(missingLabelError, labelVersion)
-				}
-
-				nodes = append(nodes, providerv1alpha1.NewStatusClusterNode(n, v, l))
+			i, err := r.clusterIDFunc(obj)
+			if err != nil {
+				return nil, microerror.Mask(err)
+			}
+			e, err := r.clusterEndpointFunc(obj)
+			if err != nil {
+				return nil, microerror.Mask(err)
 			}
 
-			nodesDiffer := nodes != nil && !allNodesEqual(clusterStatus.Nodes, nodes)
+			restConfig, err := r.tenantCluster.NewRestConfig(ctx, i, e)
+			if tenantcluster.IsTimeout(err) {
+				r.logger.LogCtx(ctx, "level", "debug", "message", "did not create Kubernetes client for tenant cluster")
+				r.logger.LogCtx(ctx, "level", "debug", "message", "waiting for certificates timed out")
+			} else if err != nil {
+				return nil, microerror.Mask(err)
+			} else {
+				r.logger.LogCtx(ctx, "level", "debug", "message", "created Kubernetes client for tenant cluster")
+			}
 
-			if nodesDiffer {
-				patches = append(patches, Patch{
-					Op:    "replace",
-					Path:  "/status/cluster/nodes",
-					Value: nodes,
-				})
+			clientsConfig := k8sclient.ClientsConfig{
+				RestConfig: restConfig,
+			}
+			k8sClients, err := k8sclient.NewClients(clientsConfig)
+			if err != nil {
+				return nil, microerror.Mask(err)
+			}
 
-				r.logger.LogCtx(ctx, "level", "info", "message", "setting status nodes")
+			k8sClient = k8sClients.K8sClient()
+		}
+
+		if k8sClient != nil {
+			o := metav1.ListOptions{}
+			list, err := k8sClient.CoreV1().Nodes().List(o)
+			if tenant.IsAPINotAvailable(err) {
+				// fall through
+			} else if err != nil {
+				return nil, microerror.Mask(err)
+			} else {
+				var nodes []providerv1alpha1.StatusClusterNode
+
+				for _, node := range list.Items {
+					l := node.GetLabels()
+					n := node.GetName()
+
+					labelProvider := "giantswarm.io/provider"
+					p, ok := l[labelProvider]
+					if !ok {
+						return nil, microerror.Maskf(missingLabelError, labelProvider)
+					}
+					labelVersion := p + "-operator.giantswarm.io/version"
+					v, ok := l[labelVersion]
+					if !ok {
+						return nil, microerror.Maskf(missingLabelError, labelVersion)
+					}
+
+					nodes = append(nodes, providerv1alpha1.NewStatusClusterNode(n, v, l))
+				}
+
+				nodesDiffer := nodes != nil && !allNodesEqual(clusterStatus.Nodes, nodes)
+
+				if nodesDiffer {
+					patches = append(patches, Patch{
+						Op:    "replace",
+						Path:  "/status/cluster/nodes",
+						Value: nodes,
+					})
+
+					r.logger.LogCtx(ctx, "level", "info", "message", "setting status nodes")
+				}
 			}
 		}
 	}
