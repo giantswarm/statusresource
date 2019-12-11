@@ -244,6 +244,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 			}
 
 			clientsConfig := k8sclient.ClientsConfig{
+				Logger:     r.logger,
 				RestConfig: restConfig,
 			}
 			k8sClients, err := k8sclient.NewClients(clientsConfig)
