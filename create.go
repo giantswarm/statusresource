@@ -248,7 +248,10 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 				RestConfig: restConfig,
 			}
 			k8sClients, err := k8sclient.NewClients(clientsConfig)
-			if err != nil {
+			if tenant.IsAPINotAvailable(err) {
+				r.logger.LogCtx(ctx, "level", "debug", "message", "tenant cluster is not available")
+				return patches, nil
+			} else if err != nil {
 				return nil, microerror.Mask(err)
 			}
 
@@ -260,6 +263,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 			list, err := k8sClient.CoreV1().Nodes().List(o)
 			if tenant.IsAPINotAvailable(err) {
 				// fall through
+				r.logger.LogCtx(ctx, "level", "debug", "message", "tenant cluster is not available")
 			} else if err != nil {
 				return nil, microerror.Mask(err)
 			} else {
