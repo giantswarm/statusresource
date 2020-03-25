@@ -38,32 +38,32 @@ required = [
   name = "github.com/docker/distribution"
 
 [[constraint]]
-  branch = "master"
   name = "github.com/giantswarm/operatorkit"
+  version = "~0.1.0"
 
 [[constraint]]
-  version = "~0.1.0"
   name = "github.com/giantswarm/apiextensions"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/giantswarm/backoff"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/giantswarm/errors"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/giantswarm/tenantcluster"
-
-[[constraint]]
   version = "~0.1.0"
-  name = "github.com/giantswarm/microerror"
 
 [[constraint]]
-  version = "~v0.1.0"
+  name = "github.com/giantswarm/backoff"
+  version = "~0.1.0"
+
+[[constraint]]
+  name = "github.com/giantswarm/errors"
+  version = "~0.1.0"
+
+[[constraint]]
+  name = "github.com/giantswarm/tenantcluster"
+  version = "~0.1.0"
+
+[[constraint]]
+  name = "github.com/giantswarm/microerror"
+  version = "~0.1.0"
+
+[[constraint]]
   name = "github.com/giantswarm/micrologger"
+  version = "~v0.1.0"
 
 [[constraint]]
   branch = "master"
