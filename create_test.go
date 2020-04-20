@@ -6,6 +6,7 @@ import (
 
 	providerv1alpha1 "github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
 	"github.com/google/go-cmp/cmp"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func Test_removeTimesFromNodes(t *testing.T) {
@@ -24,7 +25,7 @@ func Test_removeTimesFromNodes(t *testing.T) {
 						"baz": "foo",
 					},
 
-					LastTransitionTime: providerv1alpha1.DeepCopyTime{
+					LastTransitionTime: metav1.Time{
 						Time: time.Unix(123000, 0),
 					},
 					Name:    "worker-1234",
@@ -37,7 +38,7 @@ func Test_removeTimesFromNodes(t *testing.T) {
 						"ghi": "789",
 					},
 
-					LastTransitionTime: providerv1alpha1.DeepCopyTime{
+					LastTransitionTime: metav1.Time{
 						Time: time.Unix(234500, 0),
 					},
 					Name:    "worker-2345",
@@ -52,7 +53,7 @@ func Test_removeTimesFromNodes(t *testing.T) {
 						"baz": "foo",
 					},
 
-					LastTransitionTime: providerv1alpha1.DeepCopyTime{
+					LastTransitionTime: metav1.Time{
 						Time: time.Time{},
 					},
 					Name:    "worker-1234",
@@ -65,7 +66,7 @@ func Test_removeTimesFromNodes(t *testing.T) {
 						"ghi": "789",
 					},
 
-					LastTransitionTime: providerv1alpha1.DeepCopyTime{
+					LastTransitionTime: metav1.Time{
 						Time: time.Time{},
 					},
 					Name:    "worker-2345",
