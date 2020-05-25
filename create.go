@@ -242,6 +242,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 			if tenantcluster.IsTimeout(err) {
 				r.logger.LogCtx(ctx, "level", "debug", "message", "did not create Kubernetes client for tenant cluster")
 				r.logger.LogCtx(ctx, "level", "debug", "message", "waiting for certificates timed out")
+				return patches, nil
 			} else if err != nil {
 				return nil, microerror.Mask(err)
 			}
