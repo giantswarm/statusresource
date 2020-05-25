@@ -3,6 +3,7 @@ package statusresource
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"strings"
 	"time"
@@ -129,6 +130,7 @@ func (r *Resource) applyPatches(ctx context.Context, accessor metav1.Object, pat
 	} else if errors.IsResourceExpired(err) {
 		return microerror.Mask(err)
 	} else if err != nil {
+		r.logger.LogCtx(ctx, "level", "error", "message", fmt.Sprintf("unknown error: %#v", err), "stack", microerror.JSON(err))
 		return microerror.Mask(err)
 	}
 
