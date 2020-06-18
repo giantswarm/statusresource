@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [0.4.0] 2020-06-18
+
 ### Changed
 
 - Update `k8sclient` dependency to `3.1.0`.
@@ -19,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update `apiextensions` dependency to `v0.3.0`.
   - Notable change: Move from `DeepCopyTime()` to k8s built-in `metav1.Time`.
-
 
 
 ## [0.2.1] 2020-04-17
@@ -47,7 +49,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]: https://github.com/giantswarm/statusresource/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/giantswarm/statusresource/compare/v0.4.0...HEAD
+
+[0.4.0]: https://github.com/giantswarm/statusresource/compare/v0.3.0...v0.4.0
 
 [0.3.0]: https://github.com/giantswarm/statusresource/compare/v0.2.1...v0.3.0
 
