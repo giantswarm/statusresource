@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update `k8sclient` dependency to `3.1.0`.
+- Update `tenantcluster` dependency to `2.0.0`.
 
 
 ## [0.3.0] 2020-04-20
