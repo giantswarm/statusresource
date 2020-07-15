@@ -41,7 +41,7 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 				return microerror.Mask(err)
 			}
 
-			newObj, err := r.restClient.Get().AbsPath(accessor.GetSelfLink()).Do().Get()
+			newObj, err := r.restClient.Get().AbsPath(accessor.GetSelfLink()).Do(ctx).Get()
 			if err != nil {
 				return microerror.Mask(err)
 			}
@@ -260,7 +260,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 		r.logger.LogCtx(ctx, "level", "debug", "message", "created Kubernetes client for tenant cluster")
 
 		o := metav1.ListOptions{}
-		list, err := k8sClient.CoreV1().Nodes().List(o)
+		list, err := k8sClient.CoreV1().Nodes().List(ctx, o)
 		if err != nil {
 			return nil, microerror.Mask(err)
 		}

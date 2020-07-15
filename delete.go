@@ -37,7 +37,7 @@ func (r *Resource) EnsureDeleted(ctx context.Context, obj interface{}) error {
 				return microerror.Mask(err)
 			}
 
-			newObj, err := r.restClient.Get().AbsPath(accessor.GetSelfLink()).Do().Get()
+			newObj, err := r.restClient.Get().AbsPath(accessor.GetSelfLink()).Do(ctx).Get()
 			if errors.IsNotFound(err) {
 				return backoff.Permanent(microerror.Mask(notFoundError))
 			} else if err != nil {

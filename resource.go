@@ -123,7 +123,7 @@ func (r *Resource) applyPatches(ctx context.Context, accessor metav1.Object, pat
 	}
 	p := ensureSelfLink(accessor.GetSelfLink())
 
-	err = r.restClient.Patch(types.JSONPatchType).AbsPath(p).Body(b).Do().Error()
+	err = r.restClient.Patch(types.JSONPatchType).AbsPath(p).Body(b).Do(ctx).Error()
 	if errors.IsConflict(err) {
 		return microerror.Mask(err)
 	} else if errors.IsResourceExpired(err) {
