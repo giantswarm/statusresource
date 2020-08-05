@@ -1,6 +1,8 @@
 package statusresource
 
 import (
+	"context"
+
 	"github.com/giantswarm/exporterkit/collector"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
@@ -10,7 +12,7 @@ import (
 
 type CollectorSetConfig struct {
 	Logger  micrologger.Logger
-	Watcher func(opts metav1.ListOptions) (watch.Interface, error)
+	Watcher func(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error)
 }
 
 // Set is basically only a wrapper for the operator's collector implementations.
