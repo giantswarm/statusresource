@@ -6,13 +6,13 @@ import (
 	"reflect"
 	"time"
 
-	providerv1alpha1 "github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
+	providerv1alpha1 "github.com/giantswarm/apiextensions/v2/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/backoff"
 	"github.com/giantswarm/errors/tenant"
-	"github.com/giantswarm/k8sclient/v3/pkg/k8sclient"
+	"github.com/giantswarm/k8sclient/v4/pkg/k8sclient"
 	"github.com/giantswarm/microerror"
-	"github.com/giantswarm/operatorkit/controller/context/reconciliationcanceledcontext"
-	"github.com/giantswarm/tenantcluster/v2/pkg/tenantcluster"
+	"github.com/giantswarm/operatorkit/v2/pkg/controller/context/reconciliationcanceledcontext"
+	"github.com/giantswarm/tenantcluster/v3/pkg/tenantcluster"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -41,7 +41,7 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 				return microerror.Mask(err)
 			}
 
-			newObj, err := r.restClient.Get().AbsPath(accessor.GetSelfLink()).Do().Get()
+			newObj, err := r.restClient.Get().AbsPath(accessor.GetSelfLink()).Do(ctx).Get()
 			if err != nil {
 				return microerror.Mask(err)
 			}
@@ -260,7 +260,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 		r.logger.LogCtx(ctx, "level", "debug", "message", "created Kubernetes client for tenant cluster")
 
 		o := metav1.ListOptions{}
-		list, err := k8sClient.CoreV1().Nodes().List(o)
+		list, err := k8sClient.CoreV1().Nodes().List(ctx, o)
 		if err != nil {
 			return nil, microerror.Mask(err)
 		}

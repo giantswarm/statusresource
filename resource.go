@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
-	providerv1alpha1 "github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
+	providerv1alpha1 "github.com/giantswarm/apiextensions/v2/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/backoff"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
-	"github.com/giantswarm/tenantcluster/v2/pkg/tenantcluster"
+	"github.com/giantswarm/tenantcluster/v3/pkg/tenantcluster"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -123,7 +123,7 @@ func (r *Resource) applyPatches(ctx context.Context, accessor metav1.Object, pat
 	}
 	p := ensureSelfLink(accessor.GetSelfLink())
 
-	err = r.restClient.Patch(types.JSONPatchType).AbsPath(p).Body(b).Do().Error()
+	err = r.restClient.Patch(types.JSONPatchType).AbsPath(p).Body(b).Do(ctx).Error()
 	if errors.IsConflict(err) {
 		return microerror.Mask(err)
 	} else if errors.IsResourceExpired(err) {

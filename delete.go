@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	providerv1alpha1 "github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
+	providerv1alpha1 "github.com/giantswarm/apiextensions/v2/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/backoff"
 	"github.com/giantswarm/microerror"
-	"github.com/giantswarm/operatorkit/controller/context/finalizerskeptcontext"
-	"github.com/giantswarm/operatorkit/controller/context/reconciliationcanceledcontext"
+	"github.com/giantswarm/operatorkit/v2/pkg/controller/context/finalizerskeptcontext"
+	"github.com/giantswarm/operatorkit/v2/pkg/controller/context/reconciliationcanceledcontext"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 )
@@ -37,7 +37,7 @@ func (r *Resource) EnsureDeleted(ctx context.Context, obj interface{}) error {
 				return microerror.Mask(err)
 			}
 
-			newObj, err := r.restClient.Get().AbsPath(accessor.GetSelfLink()).Do().Get()
+			newObj, err := r.restClient.Get().AbsPath(accessor.GetSelfLink()).Do(ctx).Get()
 			if errors.IsNotFound(err) {
 				return backoff.Permanent(microerror.Mask(notFoundError))
 			} else if err != nil {

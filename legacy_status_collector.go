@@ -1,10 +1,11 @@
 package statusresource
 
 import (
+	"context"
 	"sync"
 	"time"
 
-	providerv1alpha1 "github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
+	providerv1alpha1 "github.com/giantswarm/apiextensions/v2/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
 	"github.com/prometheus/client_golang/prometheus"
@@ -35,12 +36,12 @@ var (
 
 type LegacyStatusCollectorConfig struct {
 	Logger  micrologger.Logger
-	Watcher func(opts metav1.ListOptions) (watch.Interface, error)
+	Watcher func(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error)
 }
 
 type LegacyStatusCollector struct {
 	logger  micrologger.Logger
-	watcher func(opts metav1.ListOptions) (watch.Interface, error)
+	watcher func(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error)
 
 	bootOnce sync.Once
 }
@@ -64,7 +65,9 @@ func NewLegacyStatusCollector(config LegacyStatusCollectorConfig) (*LegacyStatus
 }
 
 func (c *LegacyStatusCollector) Collect(ch chan<- prometheus.Metric) error {
-	watcher, err := c.watcher(metav1.ListOptions{})
+	ctx := context.Background()
+
+	watcher, err := c.watcher(ctx, metav1.ListOptions{})
 	if err != nil {
 		return microerror.Mask(err)
 	}
