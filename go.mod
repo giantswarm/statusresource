@@ -10,10 +10,10 @@ require (
 	github.com/giantswarm/k8sclient/v5 v5.0.0
 	github.com/giantswarm/microerror v0.2.1
 	github.com/giantswarm/micrologger v0.3.3
-	github.com/giantswarm/operatorkit/v2 v2.0.0
+	github.com/giantswarm/operatorkit/v4 v4.0.0
 	github.com/giantswarm/tenantcluster/v3 v3.0.0
 	github.com/google/go-cmp v0.5.2
-	github.com/prometheus/client_golang v1.7.1
+	github.com/prometheus/client_golang v1.8.0
 	k8s.io/apimachinery v0.18.9
 	k8s.io/client-go v0.18.9
 )
