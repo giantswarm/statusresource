@@ -251,7 +251,9 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 				RestConfig: restConfig,
 			}
 			k8sClients, err := k8sclient.NewClients(clientsConfig)
-			if err != nil {
+			if tenant.IsAPINotAvailable(err) || k8sclient.IsTimeout(err) {
+				return nil, nil
+			} else if err != nil {
 				return nil, microerror.Mask(err)
 			}
 
