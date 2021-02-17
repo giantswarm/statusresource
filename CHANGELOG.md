@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add additional error handling for timeouts and not-ready API servers.
+
 ## [3.0.0] - 2020-10-27
 
 ### Changed
