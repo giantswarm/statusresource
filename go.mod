@@ -5,9 +5,9 @@ go 1.14
 require (
 	github.com/giantswarm/apiextensions/v3 v3.18.1
 	github.com/giantswarm/backoff v0.2.0
-	github.com/giantswarm/errors v0.2.4-0.20210217165313-8009cda37993
+	github.com/giantswarm/errors v0.3.0
 	github.com/giantswarm/exporterkit v0.2.0
-	github.com/giantswarm/k8sclient/v5 v5.10.1-0.20210217170022-c9e247185fe6
+	github.com/giantswarm/k8sclient/v5 v5.11.0
 	github.com/giantswarm/microerror v0.3.0
 	github.com/giantswarm/micrologger v0.5.0
 	github.com/giantswarm/operatorkit/v4 v4.0.0
