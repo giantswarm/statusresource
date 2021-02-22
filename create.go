@@ -252,6 +252,7 @@ func (r *Resource) computeCreateEventPatches(ctx context.Context, obj interface{
 			}
 			k8sClients, err := k8sclient.NewClients(clientsConfig)
 			if tenant.IsAPINotAvailable(err) || k8sclient.IsTimeout(err) {
+				r.logger.Debugf(ctx, "did not create Kubernetes client for tenant cluster, api is not yet available, canceling resource")
 				return nil, nil
 			} else if err != nil {
 				return nil, microerror.Mask(err)
