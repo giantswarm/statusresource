@@ -14,8 +14,8 @@ require (
 	github.com/giantswarm/tenantcluster/v4 v4.0.0
 	github.com/google/go-cmp v0.5.4
 	github.com/prometheus/client_golang v1.8.0
-	k8s.io/apimachinery v0.18.9
-	k8s.io/client-go v0.18.9
+	k8s.io/apimachinery v0.18.18
+	k8s.io/client-go v0.18.18
 )
 
 replace sigs.k8s.io/cluster-api => github.com/giantswarm/cluster-api v0.3.10-gs
