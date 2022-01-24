@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update `operatorkit` and `k8sclient` libraries both to `v7`.
+
 ## [3.1.0] - 2021-02-22
 
 ### Added
