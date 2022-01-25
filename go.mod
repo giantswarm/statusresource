@@ -7,7 +7,7 @@ require (
 	github.com/giantswarm/backoff v1.0.0
 	github.com/giantswarm/errors v0.3.0
 	github.com/giantswarm/exporterkit v1.0.0
-	github.com/giantswarm/k8sclient/v7 v7.0.1
+	github.com/giantswarm/k8sclient/v7 v7.0.2-0.20220125224721-61c61df4875f
 	github.com/giantswarm/microerror v0.4.0
 	github.com/giantswarm/micrologger v0.6.0
 	github.com/giantswarm/operatorkit/v7 v7.0.0
