@@ -1,6 +1,6 @@
 package statusresource
 
-import providerv1alpha1 "github.com/giantswarm/apiextensions/v3/pkg/apis/provider/v1alpha1"
+import providerv1alpha1 "github.com/giantswarm/apiextensions/v6/pkg/apis/provider/v1alpha1"
 
 type Patch struct {
 	Op    string      `json:"op"`
