@@ -1,4 +1,4 @@
-module github.com/giantswarm/statusresource/v4
+module github.com/giantswarm/statusresource/v5
 
 go 1.17
 
